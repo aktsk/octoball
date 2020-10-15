@@ -10,7 +10,7 @@ RuboCop::RakeTask.new
 namespace :db do
   mysql_spec = {
     adapter:  'mysql2',
-    host:     'localhost',
+    host:     (ENV['MYSQL_HOST'] || 'localhost'),
     username: (ENV['MYSQL_USER'] || 'root'),
     encoding: 'utf8mb4',
   }

@@ -4,7 +4,7 @@ ActiveRecord::Base.logger = Logger.new(File.open('database.log', 'a'))
 
 mysql_spec = {
   adapter:  'mysql2',
-  host:     'localhost',
+  host:     (ENV['MYSQL_HOST'] || 'localhost'),
   username: (ENV['MYSQL_USER'] || 'root'),
   encoding: 'utf8mb4',
 }

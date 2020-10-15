@@ -1,3 +1,4 @@
 /.bundle
+/database.log
 .byebug_history
 /vendor

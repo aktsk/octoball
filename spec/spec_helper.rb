@@ -6,12 +6,12 @@ Octoball.instance_variable_set(:@directory, File.dirname(__FILE__))
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   mysql_spec = {
     adapter:  'mysql2',
-    host:     'localhost',
+    host:     (ENV['MYSQL_HOST'] || 'localhost'),
     username: (ENV['MYSQL_USER'] || 'root'),
     encoding: 'utf8mb4',
   }
