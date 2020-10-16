@@ -12,9 +12,12 @@ Octoball provides a migration path to Rails 6.1+ for applications using [Octopus
     ```
   - Each model instance knows which shard it came from so shard will be switched automatically:
     ```ruby
-    user = User.using(:shard1).find_by_name("Bob")
-    user.age += 1
-    user.save!  #  Save the user in the correct shard `:shard1`
+    user1 = User.using(:shard1).find_by_name("Bob")
+    user2 = User.using(:shard2).find_by_name("Charlie")
+    user1.age += 1
+    user2.age += 1
+    user1.save!  #  Save the user1 in the correct shard `:shard1`
+    user2.save!  #  Save the user2 in the correct shard `:shard2`
     ```
   - Relations such as `has_many` are also resolved from the model instance's shard:
     ```ruby
