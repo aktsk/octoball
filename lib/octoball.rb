@@ -8,6 +8,7 @@ require 'octoball/current_shard_tracker'
 require 'octoball/association'
 require 'octoball/association_shard_check'
 require 'octoball/persistence'
+require 'octoball/log_subscriber'
 
 class Octoball
   def self.using(shard, &block)
