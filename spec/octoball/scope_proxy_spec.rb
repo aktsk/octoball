@@ -56,7 +56,7 @@ describe Octoball do
   end
 
   it "should raise a exception when trying to send a query to a shard that don't exists" do
-    expect { User.using(:dont_exists).all }.to raise_exception(ActiveRecord::ConnectionNotEstablished)
+    expect { User.using(:dont_exists).first }.to raise_exception(ActiveRecord::ConnectionNotEstablished)
   end
 
   context "dup / clone" do

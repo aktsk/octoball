@@ -45,18 +45,19 @@ class Octoball
       elsif ENUM_WITH_BLOCK_METHODS.include?(method)
         self.class.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
-          ret =
-            if mblock
-              #{connected_to} { @rel.to_a }.#{method}(*margs, **mkwargs, &mblock)
-            else
-              #{connected_to} { @rel.#{method}(*margs, **mkwargs, &mblock) }
-            end
+          ret = nil
+          if mblock
+            ret = #{connected_to} { @rel.to_a }.#{method}(*margs, **mkwargs, &mblock)
+          else
+            #{connected_to} { ret = @rel.#{method}(*margs, **mkwargs, &mblock); nil } # return nil avoid loading relation
+          end
           #{postamble}
         EOS
       else
         self.class.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
-          ret = #{connected_to} { @rel.#{method}(*margs, **mkwargs, &mblock) }
+          ret = nil
+          #{connected_to} { ret = @rel.#{method}(*margs, **mkwargs, &mblock); nil } # return nil to avoid loading relation
           #{postamble}
         EOS
       end
