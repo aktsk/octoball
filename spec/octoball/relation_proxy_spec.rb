@@ -14,7 +14,7 @@ describe Octoball::RelationProxy do
 
     it 'can define collection association with the same name as ancestor private method' do
       @client.comments << Comment.using(:canada).create!(open: true)
-      expect(@client.comments.open.instance_variable_get(:@rel)).to be_a_kind_of(ActiveRecord::Relation)
+      expect(@client.comments.open.ar_relation).to be_a_kind_of(ActiveRecord::Relation)
     end
 
     it 'can be dumped and loaded' do
@@ -70,21 +70,19 @@ describe Octoball::RelationProxy do
       expect { @relation.find_each.lazy.each(&:inspect) }.not_to raise_error
     end
 
-    context 'under Rails 4' do
-      it 'should be able to return its ActiveRecord::Relation' do
-        expect(@relation.instance_variable_get(:@rel).is_a?(ActiveRecord::Relation)).to be true
-      end
+    it 'should be able to return its ActiveRecord::Relation' do
+      expect(@relation.ar_relation.is_a? ActiveRecord::Relation).to eq true
+    end
 
-      it 'is equal to an identically-defined, but different, RelationProxy' do
-        i = @client.items
-        expect(@relation).to eq(i)
-        expect(@relation.__id__).not_to eq(i.__id__)
-      end
+    it 'is equal to an identically-defined, but different, RelationProxy' do
+      i = @client.items
+      expect(@relation).to eq(i)
+      expect(@relation.__id__).not_to eq(i.__id__)
+    end
 
-      it 'is equal to its own underlying ActiveRecord::Relation' do
-        expect(@relation).to eq(@relation.instance_variable_get(:@rel))
-        expect(@relation.instance_variable_get(:@rel)).to eq(@relation)
-      end
+    it 'is equal to its own underlying ActiveRecord::Relation' do
+      expect(@relation).to eq(@relation.ar_relation)
+      expect(@relation.ar_relation).to eq(@relation)
     end
 
     context 'when no explicit shard context is provided' do

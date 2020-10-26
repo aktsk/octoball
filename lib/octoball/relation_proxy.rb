@@ -1,14 +1,30 @@
 # frozen_string_literal: true
 
 class Octoball
-  class RelationProxy
+  class RelationProxy < BasicObject
+    attr_reader :current_shard
+
     def initialize(rel, shard)
       @rel = rel
+      self.current_shard = shard
+    end
+
+    def current_shard=(shard)
       @current_shard = shard
-      @rel.current_shard = shard unless rel.is_a?(::Enumerator)
+      @rel.current_shard = shard unless @rel.is_a?(::Enumerator)
+    end
+
+    def using(shard)
+      self.current_shard = shard
+      self
+    end
+
+    def ar_relation
+      @rel
     end
 
     def respond_to?(method, include_all = false)
+      return true if method == :ar_relation
       @rel.respond_to?(method, include_all)
     end
 
@@ -34,16 +50,16 @@ class Octoball
           ::Octoball::RelationProxy.new(ret, @current_shard)
         end
       EOS
-      connected_to = 'ActiveRecord::Base.connected_to(role: Octoball.current_role, shard: @current_shard)'
+      connected_to = '::ActiveRecord::Base.connected_to(role: ::Octoball.current_role, shard: @current_shard)'
 
       if ENUM_METHODS.include?(method)
-        self.class.class_eval <<-EOS, __FILE__, __LINE__ - 1
+        ::Octoball::RelationProxy.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
           ret = #{connected_to} { @rel.to_a }.#{method}(*margs, **mkwargs, &mblock)
           #{postamble}
         EOS
       elsif ENUM_WITH_BLOCK_METHODS.include?(method)
-        self.class.class_eval <<-EOS, __FILE__, __LINE__ - 1
+        ::Octoball::RelationProxy.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
           ret = nil
           if mblock
@@ -54,7 +70,7 @@ class Octoball
           #{postamble}
         EOS
       else
-        self.class.class_eval <<-EOS, __FILE__, __LINE__ - 1
+        ::Octoball::RelationProxy.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
           ret = nil
           #{connected_to} { ret = @rel.#{method}(*margs, **mkwargs, &mblock); nil } # return nil to avoid loading relation
@@ -67,19 +83,19 @@ class Octoball
 
     def inspect
       return @rel.inspect unless @current_shard
-      ActiveRecord::Base.connected_to(shard: @current_shard, role: Octoball.current_role) { @rel.inspect }
+      ::ActiveRecord::Base.connected_to(shard: @current_shard, role: ::Octoball.current_role) { @rel.inspect }
     end
 
     def ==(obj)
       return false if obj.respond_to?(:current_shard) && obj.current_shard != @current_shard
       return @rel == obj unless @current_shard
-      ActiveRecord::Base.connected_to(shard: @current_shard, role: Octoball.current_role) { @rel == obj }
+      ::ActiveRecord::Base.connected_to(shard: @current_shard, role: ::Octoball.current_role) { @rel == obj }
     end
 
     def ===(obj)
       return false if obj.respond_to?(:current_shard) && obj.current_shard != @current_shard
       return @rel === obj unless @current_shard
-      ActiveRecord::Base.connected_to(shard: @current_shard, role: Octoball.current_role) { @rel === obj }
+      ::ActiveRecord::Base.connected_to(shard: @current_shard, role: ::Octoball.current_role) { @rel === obj }
     end
   end
 end
