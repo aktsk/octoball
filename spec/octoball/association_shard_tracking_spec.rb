@@ -27,6 +27,14 @@ describe Octoball::ShardedSingularAssociation, :shards => [:brazil, :master, :ca
       expect(new_computer_brazil.keyboard).to eq(@keyboard_brazil)
     end
 
+    it 'should join/merge correctly with the relationed model' do
+      new_computer_brazil = Computer.using(:brazil).create!(:name => 'New Computer Brazil')
+      @keyboard_brazil.computer = new_computer_brazil
+      @keyboard_brazil.save
+      expect(Keyboard.using(:brazil).joins(:computer).merge(Computer.where(name: 'New Computer Brazil'))).to eq([@keyboard_brazil])
+      expect(Keyboard.using(:brazil).joins(:computer).merge(Computer.using(:master).where(name: 'New Computer Brazil'))).to eq([@keyboard_brazil])
+    end
+
     it 'should work when using #build_computer or #build_keyboard' do
       c = Computer.using(:brazil).create!(:name => 'Computer Brazil')
       k = c.build_keyboard(:name => 'Building keyboard')
