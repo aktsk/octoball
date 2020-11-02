@@ -52,7 +52,7 @@ default: &default
   connnect_timeout: 5000
 
 development:
-  primary:
+  master:
     <<: *default
     database: db_primary
   shard1_connection:
@@ -65,7 +65,7 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   connects_to shards: {
-    default: { writing: :primary },
+    master: { writing: :master },
     shard1: { writing: :shard1_connection },
   }
 end
@@ -74,6 +74,14 @@ class User < ApplicationRecord
   ...
 end
 ```
+
+Optionally, to use the `:master` shard as a default connection like Octopus, add the following script to `config/initializers/default_shard.rb`:
+```
+Rails.application.config.after_initialize do
+  ActiveRecord::Base.default_shard = :master
+end
+```
+
 
 ## Development of Octoball
 Octoball has rspec tests delived from subsets of Octopus' rspec.
