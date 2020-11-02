@@ -11,7 +11,7 @@ class Octoball
       class_eval <<-"END", __FILE__, __LINE__ + 1
         def #{method}(*args, **kwargs, &block)
           shard = owner.current_shard
-          return super if !shard || shard == ActiveRecord::Base.default_shard
+          return super if !shard || shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: shard, role: Octoball.current_role) do
             ret = super
             return ret unless ret.is_a?(::ActiveRecord::Relation) || ret.is_a?(::ActiveRecord::QueryMethods::WhereChain)
@@ -28,7 +28,7 @@ class Octoball
      :many?, :pluck, :replace, :select, :size, :sum, :to_a, :uniq].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
         def #{method}(*args, **kwargs, &block)
-          return super if !@association.owner.current_shard || @association.owner.current_shard == ActiveRecord::Base.default_shard
+          return super if !@association.owner.current_shard || @association.owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: @association.owner.current_shard, role: Octoball.current_role) do
             super
           end
@@ -41,7 +41,7 @@ class Octoball
     [:reader, :writer, :create, :create!, :build].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
         def #{method}(*args, **kwargs, &block)
-          return super if !owner.current_shard || owner.current_shard == ActiveRecord::Base.default_shard
+          return super if !owner.current_shard || owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: owner.current_shard, role: Octoball.current_role) do
             super
           end
