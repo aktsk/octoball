@@ -9,7 +9,7 @@ class Octoball
     [:reader, :writer, :ids_reader, :ids_writer, :create, :create!,
      :build, :include?, :load_target, :reload, :size, :select].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
+        def #{method}(*args, &block)
           shard = owner.current_shard
           return super if !shard || shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: shard, role: Octoball.current_role) do
@@ -27,7 +27,7 @@ class Octoball
      :destroy, :destroy_all, :empty?, :find, :first, :include?, :last, :length,
      :many?, :pluck, :replace, :select, :size, :sum, :to_a, :uniq].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
+        def #{method}(*args, &block)
           return super if !@association.owner.current_shard || @association.owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: @association.owner.current_shard, role: Octoball.current_role) do
             super
@@ -40,7 +40,7 @@ class Octoball
   module ShardedSingularAssociation
     [:reader, :writer, :create, :create!, :build].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
+        def #{method}(*args, &block)
           return super if !owner.current_shard || owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: owner.current_shard, role: Octoball.current_role) do
             super
