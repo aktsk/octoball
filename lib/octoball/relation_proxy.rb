@@ -24,12 +24,8 @@ class Octoball
     end
 
     def respond_to?(method, include_all = false)
-      return true if method == :ar_relation
+      return true if [:ar_relation, :current_shard, :current_shard=, :using].include?(method)
       @rel.respond_to?(method, include_all)
-    end
-
-    def respond_to_missing?(method, include_private)
-      @res.respond_to?(method, include_private)
     end
 
     ENUM_METHODS = (::Enumerable.instance_methods - ::Object.instance_methods).reject do |m|

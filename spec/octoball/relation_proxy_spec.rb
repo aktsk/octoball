@@ -21,6 +21,10 @@ describe Octoball::RelationProxy do
       expect(Marshal.load(Marshal.dump(@relation))).to eq @relation
     end
 
+    it 'is flattenable' do
+      expect([@relation].flatten).to eq @relation.to_a
+    end
+
     it 'maintains the current shard when using where.not(...)' do
       where_chain = @relation.where
       expect(where_chain.current_shard).to eq(@relation.current_shard)
