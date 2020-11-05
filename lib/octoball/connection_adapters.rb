@@ -2,7 +2,7 @@
 
 class Octoball
   module ConnectionHandlerSetCurrentShard
-    def retrieve_connection(spec_name, shard: ActiveRecord::Base.default_shard)
+    def retrieve_connection(spec_name, role: ActiveRecord::Base.current_role, shard: ActiveRecord::Base.current_shard)
       conn = super
       conn.current_shard = shard
       conn
