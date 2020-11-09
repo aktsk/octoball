@@ -1,9 +1,12 @@
 # Octoball - Octopus-like sharding helper library for ActiveRecord 6.1+
 
+<img src="https://user-images.githubusercontent.com/26372128/98494380-3711be00-2280-11eb-8805-6f9e47aeee21.jpg" align="left" width=120>
+
 Octoball provides [Octopus](https://github.com/thiagopradi/octopus)-like database sharding helpers for ActiveRecord 6.1+.
 This will make it easier to upgrade Rails to 6.1+ for applications using [Octopus gem](https://github.com/thiagopradi/octopus) for database sharding with Rails 4.x/5.x.
 
 Currently, its implementation is focusing on horizontal database sharding. However, by customizing shard key mapping, it can be applied to replication use case too.
+<br clear="both">
 
 ## Scope of this gem
 
