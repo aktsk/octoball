@@ -80,9 +80,7 @@ end
 
 Optionally, to use the `:master` shard as a default connection like Octopus, add the following script to `config/initializers/default_shard.rb`:
 ```
-Rails.application.config.after_initialize do
-  ActiveRecord::Base.default_shard = :master
-end
+ActiveRecord::Base.default_shard = :master
 ```
 
 
