@@ -18,6 +18,7 @@ class Octoball
             RelationProxy.new(ret, shard)
           end
         end
+        ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       END
     end
   end
@@ -33,6 +34,7 @@ class Octoball
             super
           end
         end
+        ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       END
     end
   end
@@ -46,6 +48,7 @@ class Octoball
             super
           end
         end
+        ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       END
     end
   end

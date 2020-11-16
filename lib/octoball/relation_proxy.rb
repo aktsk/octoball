@@ -45,6 +45,7 @@ class Octoball
           return ret unless ret.is_a?(::ActiveRecord::Relation) || ret.is_a?(::ActiveRecord::QueryMethods::WhereChain) || ret.is_a?(::Enumerator)
           ::Octoball::RelationProxy.new(ret, @current_shard)
         end
+        ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       EOS
       connected_to = '::ActiveRecord::Base.connected_to(role: ::Octoball.current_role, shard: @current_shard)'
 
@@ -76,6 +77,7 @@ class Octoball
 
       public_send(method, *args, &block)
     end
+    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def inspect
       return @rel.inspect unless @current_shard

@@ -90,7 +90,7 @@ Octoball has rspec tests delived from subsets of Octopus' rspec.
 To run the rspec tests, follow these steps:
 ```
 RAILS_ENV=test bundle exec rake db:prepare
-RAILS_ENV=test bundle exec rake
+RAILS_ENV=test bundle exec rake spec
 ```
 
 ## License
