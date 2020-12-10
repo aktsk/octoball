@@ -1,37 +1,36 @@
-version: 2
-config_ssh: &config_ssh
-  name: Configure to clone repository with SSH connection
-  command: |
-    mkdir -p ~/.ssh
-    ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-checkout_code: &checkout_code
-  name: Checkout code (using shallow clone)
-  command: |
-    git config --global gc.auto 0 || true
-    # Checkout
-    git clone --depth=1 --branch ${CIRCLE_BRANCH} --single-branch ${CIRCLE_REPOSITORY_URL} .
-    # Check the commit ID of the checked out code
-    git reset --hard ${CIRCLE_SHA1}
-jobs:
-  build:
+version: 2.1
+
+executors:
+  ruby:
+    parameters:
+      version:
+        type: string
     docker:
-    - image: circleci/ruby:2.7.2
+    - image: circleci/ruby:<< parameters.version >>
     - image: circleci/mysql:5
-    working_directory: ~/repo
+    environment:
+    - RAILS_ENV: test
+    - MYSQL_HOST: 127.0.0.1
+
+jobs:
+  rspec:
+    parameters:
+      version:
+        type: string
+    executor:
+      name: ruby
+      version: << parameters.version >>
     steps:
-    - run:
-        <<: *config_ssh
-    - run:
-        <<: *checkout_code
+    - checkout
     - restore_cache:
         keys:
-        - v3-dependencies-{{ checksum "Gemfile.lock" }}
-        - v3-dependencies-
+        - v3-dependencies-{{ checksum "Gemfile.lock" }}-<< parameters.version >>
     - run:
         name: bundle install
         command: |
           gem update bundler
-          bundle install --jobs=4 --retry=3 --path vendor/bundle
+          bundle config --local path vendor/bundle
+          bundle install --jobs=4 --retry=3
     - save_cache:
         paths:
         - ./vendor/bundle
@@ -40,13 +39,15 @@ jobs:
         name: Setup databases
         command: bundle exec rake db:prepare
     - run:
-        name: run tests
+        name: Run tests
         command: bundle exec rspec
-    environment:
-    - RAILS_ENV: test
-    - MYSQL_HOST: 127.0.0.1
+
 workflows:
   version: 2
-  build:
+  rspecs:
     jobs:
-    - build
+    - rspec:
+        matrix:
+          parameters:
+            version:
+            - "2.7"
