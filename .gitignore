@@ -2,3 +2,6 @@
 /database.log
 .byebug_history
 /vendor
+/pkg
+*.lock
+*.gem

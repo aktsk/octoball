@@ -22,19 +22,12 @@ jobs:
       version: << parameters.version >>
     steps:
     - checkout
-    - restore_cache:
-        keys:
-        - v3-dependencies-{{ checksum "Gemfile.lock" }}-<< parameters.version >>
     - run:
         name: bundle install
         command: |
           gem update bundler
           bundle config --local path vendor/bundle
           bundle install --jobs=4 --retry=3
-    - save_cache:
-        paths:
-        - ./vendor/bundle
-        key: v3-dependencies-{{ checksum "Gemfile.lock" }}
     - run:
         name: Setup databases
         command: bundle exec rake db:prepare
