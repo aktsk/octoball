@@ -45,13 +45,6 @@ Currently, its implementation is focusing on horizontal database sharding. Howev
 gem "octoball"
 ```
 
-Until first release:
-```
-# Bundle edge Rails
-gem 'rails', github: 'rails/rails'
-gem 'octoball', git: 'git@github.com:aktsk/octoball'
-```
-
 Define the database connections in `config/database.yml`, e.g.:
 ```
 default: &default
