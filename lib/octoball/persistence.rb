@@ -21,7 +21,7 @@ class Octoball
 
     def init_internals
       super
-      @current_shard = self.class.connection.current_shard
+      @current_shard = self.class.current_shard
     end
   end
 

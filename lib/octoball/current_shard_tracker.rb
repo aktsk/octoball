@@ -19,7 +19,7 @@ class Octoball
 
       def instantiate_instance_of(klass, attributes, column_types = {}, &block)
         result = super
-        result.instance_variable_set(:@current_shard, connection.current_shard)
+        result.instance_variable_set(:@current_shard, current_shard)
         result
       end
     end
