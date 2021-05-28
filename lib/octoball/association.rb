@@ -12,11 +12,14 @@ class Octoball
         def #{method}(*args, &block)
           shard = owner.current_shard
           return super if !shard || shard == ActiveRecord::Base.current_shard
+          ret = nil
           ActiveRecord::Base.connected_to(shard: shard, role: Octoball.current_role) do
             ret = super
             return ret unless ret.is_a?(::ActiveRecord::Relation) || ret.is_a?(::ActiveRecord::QueryMethods::WhereChain)
-            RelationProxy.new(ret, shard)
+            ret = RelationProxy.new(ret, shard)
+            nil # return nil to avoid loading relation
           end
+          ret
         end
         ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       END

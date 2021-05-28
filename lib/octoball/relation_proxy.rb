@@ -62,7 +62,7 @@ class Octoball
           if mblock
             ret = #{connected_to} { @rel.to_a }.#{method}(*margs, &mblock)
           else
-            #{connected_to} { ret = @rel.#{method}(*margs, &mblock); nil } # return nil avoid loading relation
+            #{connected_to} { ret = @rel.#{method}(*margs, &mblock); nil } # return nil to avoid loading relation
           end
           #{postamble}
         EOS
