@@ -676,7 +676,7 @@ describe Octoball::ShardedSingularAssociation, :shards => [:brazil, :master, :ca
 
       it 'empty?' do
         expect(@brazil_client.items.empty?).to be false
-        c = Client.create!(:name => 'Client1')
+        c = Client.using(:master).create!(:name => 'Client1')
         expect(c.items.empty?).to be true
       end
 
@@ -893,7 +893,7 @@ describe Octoball::ShardedSingularAssociation, :shards => [:brazil, :master, :ca
 
       it 'empty?' do
         expect(@brazil_client.comments.empty?).to be false
-        c = Client.create!(:name => 'Client1')
+        c = Client.using(:master).create!(:name => 'Client1')
         expect(c.comments.empty?).to be true
       end
 
