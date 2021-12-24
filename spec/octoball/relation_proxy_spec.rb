@@ -52,6 +52,20 @@ describe Octoball::RelationProxy do
       end
     end
 
+    context 'when a relation is used in where clause' do
+      it 'specifies the scope without a shard' do
+        client = Client.where(id: @client.id)
+        items = Item.using(:canada).where(client: client)
+        expect(items.to_a).to eq(@client.items.to_a)
+      end
+
+      it 'specifies the scope with a shard' do
+        client = Client.using(:canada).where(id: @client.id)
+        items = Item.using(:canada).where(client: client)
+        expect(items.to_a).to eq(@client.items.to_a)
+      end
+    end
+
     context 'when comparing to other Relation objects' do
       before :each do
         @relation.reset
