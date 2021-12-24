@@ -26,8 +26,9 @@ jobs:
         name: bundle install
         command: |
           gem update bundler
+          bundle config --local path ../vendor/bundle
+          bundle install --gemfile .circleci/Gemfile --jobs=4 --retry=3
           bundle config --local path vendor/bundle
-          bundle install --jobs=4 --retry=3
     - run:
         name: Setup databases
         command: bundle exec rake db:prepare
@@ -44,3 +45,4 @@ workflows:
           parameters:
             version:
             - "2.7"
+            - "3.0"

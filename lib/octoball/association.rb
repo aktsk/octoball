@@ -5,6 +5,12 @@ class Octoball
     attr_accessor :current_shard
   end
 
+  module RelationProxyIsARelation
+    def ===(other)
+      other.is_a?(self)
+    end
+  end
+
   module ShardedCollectionAssociation
     [:writer, :ids_reader, :ids_writer, :create, :create!,
      :build, :include?, :load_target, :reload, :size, :select].each do |method|
@@ -71,6 +77,7 @@ class Octoball
   end
 
   ::ActiveRecord::Relation.prepend(RelationCurrentShard)
+  ::ActiveRecord::Relation.singleton_class.prepend(RelationProxyIsARelation)
   ::ActiveRecord::QueryMethods::WhereChain.prepend(RelationCurrentShard)
   ::ActiveRecord::Associations::CollectionAssociation.prepend(ShardedCollectionAssociation)
   ::ActiveRecord::Associations::CollectionProxy.singleton_class.prepend(ShardedCollectionProxyCreate)
