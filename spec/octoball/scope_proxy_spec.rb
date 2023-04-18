@@ -39,19 +39,19 @@ describe Octoball do
     end
 
     it 'allows multiple selection by string' do
-      expect(@evan.select('id, name').first.id).to be_a(Fixnum)
+      expect(@evan.select('id, name').first.id).to be_a(Integer)
     end
 
     it 'allows multiple selection by array' do
-      expect(@evan.select(%w(id name)).first.id).to be_a(Fixnum)
+      expect(@evan.select(%w(id name)).first.id).to be_a(Integer)
     end
 
     it 'allows multiple selection by symbol' do
-      expect(@evan.select(:id, :name).first.id).to be_a(Fixnum)
+      expect(@evan.select(:id, :name).first.id).to be_a(Integer)
     end
 
     it 'allows multiple selection by string and symbol' do
-      expect(@evan.select(:id, 'name').first.id).to be_a(Fixnum)
+      expect(@evan.select(:id, 'name').first.id).to be_a(Integer)
     end
   end
 
