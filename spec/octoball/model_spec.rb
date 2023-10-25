@@ -123,7 +123,7 @@ describe Octoball do
 
     it 'should clean #current_shard from proxy when using execute' do
       User.using(:canada).connection.execute('select * from users limit 1;')
-      expect(User.connection.current_shard).to eq(:default)
+      expect(User.connection.current_shard).to eq(:master)
     end
 
     it 'should allow scoping dynamically' do
@@ -264,7 +264,7 @@ describe Octoball do
 
   describe 'AR basic methods' do
     it 'connects_to' do
-      expect(CustomConnection.connection.current_database).to eq('octoball_shard_2')
+      expect(CustomConnection.connection.current_database).to eq('octoball_shard_3')
     end
 
     it 'reuses parent model connection' do
@@ -590,7 +590,7 @@ describe Octoball do
   describe 'custom connection' do
     context 'by default' do
       it 'with plain call should use custom connection' do
-        expect(CustomConnection.connection.current_database).to eq('octoball_shard_2')
+        expect(CustomConnection.connection.current_database).to eq('octoball_shard_3')
       end
 
       it 'should use model-specific shard' do
