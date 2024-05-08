@@ -618,7 +618,7 @@ describe Octoball do
         CustomConnection.create(:value => 'custom value')
 
         # This is what Rails, Sidekiq etc call--this normally handles all connection pools in the app
-        expect { ActiveRecord::Base.clear_active_connections! }
+        expect { ActiveRecord::Base.connection_handler.clear_active_connections! }
           .to change { CustomConnection.connection_pool.active_connection? }
 
         expect(CustomConnection.connection_pool.active_connection?).to be_falsey
