@@ -43,7 +43,11 @@ namespace :db do
     require './spec/models/application_record'
     ActiveRecord::Base.configurations.configs_for(env_name: "test").each do |config|
       ActiveRecord::Base.establish_connection(config)
-      schema_migration = ActiveRecord::Base.connection.schema_migration
+      schema_migration = if ActiveRecord.gem_version >= Gem::Version.new(7.2)
+                           ActiveRecord::Base.connection.pool.schema_migration
+                         else
+                           ActiveRecord::Base.connection.schema_migration
+                         end
       ActiveRecord::MigrationContext.new("spec/migration", schema_migration)
         .migrate(config.database == 'octoball_shard_5' ? 2 : 1)
     end

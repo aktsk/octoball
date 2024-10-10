@@ -15,14 +15,14 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/aktsk/octoball'
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.1.0'
 
-  s.add_dependency 'activerecord', '>= 6.1'
-  s.add_dependency 'activesupport', '>= 6.1'
+  s.add_dependency 'activerecord', '>= 7.0'
+  s.add_dependency 'activesupport', '>= 7.0'
 
   s.add_development_dependency 'mysql2'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 3'
   s.add_development_dependency 'rubocop'
-  s.add_development_dependency 'byebug'
+  s.add_development_dependency 'debug'
 end
