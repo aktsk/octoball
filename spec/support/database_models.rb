@@ -20,7 +20,7 @@ end
 # This class sets its own connection
 class CustomConnectionBase < ActiveRecord::Base
   self.abstract_class = true
-  establish_connection(:adapter => 'mysql2', :host => (ENV['MYSQL_HOST'] || 'localhost'), :database => 'octoball_shard_2', :username => "#{ENV['MYSQL_USER'] || 'root'}", :password => '')
+  establish_connection(:adapter => 'mysql2', :host => (ENV['MYSQL_HOST'] || '127.0.0.1'), :database => 'octoball_shard_2', :username => "#{ENV['MYSQL_USER'] || 'root'}", :password => '', :port => (ENV['MYSQL_PORT'] || 3306))
   connects_to shards: {
     custom_shard: { writing: :shard3 }
   }

@@ -11,8 +11,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 RSpec.configure do |config|
   mysql_spec = {
     adapter:  'mysql2',
-    host:     (ENV['MYSQL_HOST'] || 'localhost'),
+    host:     (ENV['MYSQL_HOST'] || '127.0.0.1'),
     username: (ENV['MYSQL_USER'] || 'root'),
+    port:     (ENV['MYSQL_PORT'] || 3306),
     encoding: 'utf8mb4',
   }
   ActiveRecord::Base.configurations = {

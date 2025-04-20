@@ -59,7 +59,7 @@ default: &default
   adapter: mysql2
   pool: 5
   username: root
-  host: localhost
+  host: 127.0.0.1
   timeout: 5000
   connnect_timeout: 5000
 
