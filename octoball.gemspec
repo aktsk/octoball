@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '>= 7.0'
   s.add_dependency 'activesupport', '>= 7.0'
 
-  s.add_development_dependency 'mysql2'
+  s.add_development_dependency 'trilogy'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 3'
   s.add_development_dependency 'rubocop'

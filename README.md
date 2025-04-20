@@ -56,7 +56,7 @@ Define the database connections in `config/database.yml`, e.g.:
 
 ```
 default: &default
-  adapter: mysql2
+  adapter: trilogy
   pool: 5
   username: root
   host: 127.0.0.1
