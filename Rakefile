@@ -32,6 +32,8 @@ namespace :db do
 
   desc 'Create tables on tests databases'
   task :create_tables do
+    require 'active_record'
+
     ActiveRecord::Base.configurations = {
       "test" => {
         shard1: mysql_spec.merge(database: 'octoball_shard_1'),
