@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/aktsk/octoball'
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 3.1.0'
+  s.required_ruby_version = '>= 3.2.0'
 
   s.add_dependency 'activerecord', '>= 7.0'
   s.add_dependency 'activesupport', '>= 7.0'
