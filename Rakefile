@@ -9,9 +9,10 @@ RuboCop::RakeTask.new
 
 namespace :db do
   mysql_spec = {
-    adapter:  'mysql2',
-    host:     (ENV['MYSQL_HOST'] || 'localhost'),
+    adapter:  'trilogy',
+    host:     (ENV['MYSQL_HOST'] || '127.0.0.1'),
     username: (ENV['MYSQL_USER'] || 'root'),
+    port:     (ENV['MYSQL_PORT'] || 3306),
     encoding: 'utf8mb4',
   }
 
@@ -31,6 +32,8 @@ namespace :db do
 
   desc 'Create tables on tests databases'
   task :create_tables do
+    require 'active_record'
+
     ActiveRecord::Base.configurations = {
       "test" => {
         shard1: mysql_spec.merge(database: 'octoball_shard_1'),
