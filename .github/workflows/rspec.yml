@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        ruby: ["3.2","3.3", "3.4"]
-        rails: ["7.1", "7.2", "8.0"]
+        ruby: ["3.2", "3.3", "3.4"]
+        rails: ["7.2", "8.0"]
     env:
       BUNDLE_GEMFILE: .github/gemfiles/rails_${{ matrix.rails }}.gemfile
       MYSQL_HOST: 127.0.0.1
