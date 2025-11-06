@@ -12,11 +12,7 @@ class Octoball
     private
 
     def debug(progname = nil, &block)
-      if ActiveRecord.gem_version >= Gem::Version.new('7.1.0')
-        conn = current_shard ? color("[Shard: #{current_shard}]", ActiveSupport::LogSubscriber::GREEN, bold: true) : ''
-      else
-        conn = current_shard ? color("[Shard: #{current_shard}]", ActiveSupport::LogSubscriber::GREEN, true) : ''
-      end
+      conn = current_shard ? color("[Shard: #{current_shard}]", ActiveSupport::LogSubscriber::GREEN, bold: true) : ''
       super(conn + progname.to_s, &block)
     end
   end

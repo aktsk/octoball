@@ -6,7 +6,6 @@ require 'octoball/version'
 ActiveSupport.on_load(:active_record) do
   require 'octoball/relation_proxy'
   require 'octoball/connection_adapters'
-  require 'octoball/connection_handling'
   require 'octoball/current_shard_tracker'
   require 'octoball/association_shard_check'
   require 'octoball/persistence'
