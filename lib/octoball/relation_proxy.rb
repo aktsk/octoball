@@ -33,26 +33,25 @@ class Octoball
     end + [:each, :map, :index_by]
     ENUM_WITH_BLOCK_METHODS = [:find, :select, :none?, :any?, :one?, :many?, :sum]
 
-    def method_missing(method, *args, &block)
+    def method_missing(method, *args, **kwargs, &block)
       # raise NoMethodError unless the method is defined in @rel
-      return @rel.public_send(method, *args, &block) unless @rel.respond_to?(method)
+      return @rel.public_send(method, *args, **kwargs, &block) unless @rel.respond_to?(method)
 
       preamble = <<-EOS
-        def #{method}(*margs, &mblock)
-          return @rel.#{method}(*margs, &mblock) unless @current_shard
+        def #{method}(*margs, **mkwargs, &mblock)
+          return @rel.#{method}(*margs, **mkwargs, &mblock) unless @current_shard
       EOS
       postamble = <<-EOS
           return ret unless ret.is_a?(::ActiveRecord::Relation) || ret.is_a?(::ActiveRecord::QueryMethods::WhereChain) || ret.is_a?(::Enumerator)
           ::Octoball::RelationProxy.new(ret, @current_shard)
         end
-        ruby2_keywords(:#{method}) if respond_to?(:ruby2_keywords, true)
       EOS
       connected_to = '::ActiveRecord::Base.connected_to(role: ::Octoball.current_role, shard: @current_shard)'
 
       if ENUM_METHODS.include?(method)
         ::Octoball::RelationProxy.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
-          ret = #{connected_to} { @rel.to_a }.#{method}(*margs, &mblock)
+          ret = #{connected_to} { @rel.to_a }.#{method}(*margs, **mkwargs, &mblock)
           #{postamble}
         EOS
       elsif ENUM_WITH_BLOCK_METHODS.include?(method)
@@ -60,9 +59,9 @@ class Octoball
           #{preamble}
           ret = nil
           if mblock
-            ret = #{connected_to} { @rel.to_a }.#{method}(*margs, &mblock)
+            ret = #{connected_to} { @rel.to_a }.#{method}(*margs, **mkwargs, &mblock)
           else
-            #{connected_to} { ret = @rel.#{method}(*margs, &mblock); nil } # return nil to avoid loading relation
+            #{connected_to} { ret = @rel.#{method}(*margs, **mkwargs, &mblock); nil } # return nil to avoid loading relation
           end
           #{postamble}
         EOS
@@ -70,14 +69,13 @@ class Octoball
         ::Octoball::RelationProxy.class_eval <<-EOS, __FILE__, __LINE__ - 1
           #{preamble}
           ret = nil
-          #{connected_to} { ret = @rel.#{method}(*margs, &mblock); nil } # return nil to avoid loading relation
+          #{connected_to} { ret = @rel.#{method}(*margs, **mkwargs, &mblock); nil } # return nil to avoid loading relation
           #{postamble}
         EOS
       end
 
-      public_send(method, *args, &block)
+      public_send(method, *args, **kwargs, &block)
     end
-    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def inspect
       return @rel.inspect unless @current_shard
