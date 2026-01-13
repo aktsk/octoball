@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:5
+        image: mysql:8
         ports:
           - 3306:3306
         env:
@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        ruby: ["3.2", "3.3", "3.4"]
+        ruby: ["3.2", "3.3", "3.4", "4.0"]
         rails: ["7.2", "8.0", "8.1"]
     env:
       BUNDLE_GEMFILE: .github/gemfiles/rails_${{ matrix.rails }}.gemfile
@@ -25,7 +25,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
         with:
