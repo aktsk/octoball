@@ -11,9 +11,9 @@ class Octoball
 
     private
 
-    def debug(progname = nil, &block)
+    def debug(progname = nil, &)
       conn = current_shard ? color("[Shard: #{current_shard}]", ActiveSupport::LogSubscriber::GREEN, bold: true) : ''
-      super(conn + progname.to_s, &block)
+      super(conn + progname.to_s, &)
     end
   end
 end
