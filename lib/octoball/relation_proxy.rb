@@ -33,9 +33,9 @@ class Octoball
     end + [:each, :map, :index_by]
     ENUM_WITH_BLOCK_METHODS = [:find, :select, :none?, :any?, :one?, :many?, :sum]
 
-    def method_missing(method, *args, **kwargs, &block)
+    def method_missing(method, ...)
       # raise NoMethodError unless the method is defined in @rel
-      return @rel.public_send(method, *args, **kwargs, &block) unless @rel.respond_to?(method)
+      return @rel.public_send(method, ...) unless @rel.respond_to?(method)
 
       preamble = <<-EOS
         def #{method}(*margs, **mkwargs, &mblock)
@@ -74,7 +74,7 @@ class Octoball
         EOS
       end
 
-      public_send(method, *args, **kwargs, &block)
+      public_send(method, ...)
     end
 
     def inspect

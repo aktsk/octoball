@@ -15,12 +15,12 @@ class Octoball
     [:writer, :ids_reader, :ids_writer, :create, :create!,
      :build, :include?, :load_target, :reload, :size, :select].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
+        def #{method}(...)
           shard = owner.current_shard
-          return super(*args, **kwargs, &block) if !shard || shard == ActiveRecord::Base.current_shard
+          return super if !shard || shard == ActiveRecord::Base.current_shard
           ret = nil
           ActiveRecord::Base.connected_to(shard: shard, role: Octoball.current_role) do
-            ret = super(*args, **kwargs, &block)
+            ret = super
             return ret unless ret.is_a?(::ActiveRecord::Relation) || ret.is_a?(::ActiveRecord::QueryMethods::WhereChain)
             ret = RelationProxy.new(ret, shard)
             nil # return nil to avoid loading relation
@@ -50,10 +50,10 @@ class Octoball
      :destroy, :destroy_all, :empty?, :find, :first, :include?, :last, :length,
      :many?, :pluck, :replace, :select, :size, :sum, :to_a, :uniq].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
-          return super(*args, **kwargs, &block) if !@association.owner.current_shard || @association.owner.current_shard == ActiveRecord::Base.current_shard
+        def #{method}(...)
+          return super if !@association.owner.current_shard || @association.owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: @association.owner.current_shard, role: Octoball.current_role) do
-            super(*args, **kwargs, &block)
+            super
           end
         end
       END
@@ -63,10 +63,10 @@ class Octoball
   module ShardedSingularAssociation
     [:reload, :writer, :create, :create!, :build].each do |method|
       class_eval <<-"END", __FILE__, __LINE__ + 1
-        def #{method}(*args, **kwargs, &block)
-          return super(*args, **kwargs, &block) if !owner.current_shard || owner.current_shard == ActiveRecord::Base.current_shard
+        def #{method}(...)
+          return super if !owner.current_shard || owner.current_shard == ActiveRecord::Base.current_shard
           ActiveRecord::Base.connected_to(shard: owner.current_shard, role: Octoball.current_role) do
-            super(*args, **kwargs, &block)
+            super
           end
         end
       END

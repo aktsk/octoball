@@ -17,7 +17,7 @@ class Octoball
     module ClassMethods
       private
 
-      def instantiate_instance_of(klass, attributes, column_types = {}, &block)
+      def instantiate_instance_of(...)
         result = super
         result.instance_variable_set(:@current_shard, current_shard)
         result
