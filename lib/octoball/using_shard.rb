@@ -1,6 +1,6 @@
 class Octoball
-  def self.using(shard, &block)
-    ActiveRecord::Base.connected_to(role: current_role, shard: shard&.to_sym, &block)
+  def self.using(shard, &)
+    ActiveRecord::Base.connected_to(role: current_role, shard: shard&.to_sym, &)
   end
 
   def self.current_role
