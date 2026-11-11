@@ -15,12 +15,10 @@ class Octoball
 
   module ConnectionPoolSetCurrentShard
     def with_connection(prevent_permanent_checkout: false)
-      lease = connection_lease
-      if lease.connection
-        lease.connection.current_shard = lease.connection.shard
+      super(prevent_permanent_checkout: prevent_permanent_checkout) do |connection|
+        connection.current_shard = connection.shard
+        yield connection
       end
-
-      super
     end
 
     def active_connection?

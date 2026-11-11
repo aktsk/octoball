@@ -16,4 +16,31 @@ describe Octoball::LogSubscriber, :shards => [:canada] do
     User.using(:canada).create!(:name => 'test')
     expect(@out.string).to match(/Shard: canada/)
   end
+
+  describe '#with_connection' do
+    before :each do
+      Octoball.using(:canada) do
+        @pool = ApplicationRecord.connection_pool
+      end
+      @pool.disconnect!
+    end
+
+    after :each do
+      @pool.release_connection
+      @pool.disconnect!
+    end
+
+    it 'should log the shard name for a new connection' do
+      @pool.with_connection { |connection| connection.execute('SELECT 1') }
+
+      expect(@out.string).to match(/\[Shard: canada\].*SELECT 1/)
+    end
+
+    it 'should log the shard name for an existing connection' do
+      @pool.lease_connection.current_shard = nil
+      @pool.with_connection { |connection| connection.execute('SELECT 1') }
+
+      expect(@out.string).to match(/\[Shard: canada\].*SELECT 1/)
+    end
+  end
 end
