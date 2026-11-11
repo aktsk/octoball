@@ -34,11 +34,9 @@ class Octoball
     end
 
     def lease_connection
-      lease = connection_lease
-      lease.sticky = true
-      lease.connection ||= checkout
-      lease.connection.current_shard = lease.connection.shard
-      lease.connection
+      conn = super
+      conn.current_shard = conn.shard
+      conn
     end
   end
 
