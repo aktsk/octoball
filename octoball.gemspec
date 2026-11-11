@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.3.0'
 
-  s.add_dependency 'activerecord', '>= 7.2'
-  s.add_dependency 'activesupport', '>= 7.2'
+  s.add_dependency 'activerecord', '>= 8.0'
+  s.add_dependency 'activesupport', '>= 8.0'
 
   s.add_development_dependency 'trilogy'
   s.add_development_dependency 'rake'
